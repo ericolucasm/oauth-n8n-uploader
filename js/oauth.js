@@ -1,3 +1,110 @@
+let accessToken = null;
+let provider = null;
+let userEmail = null;
+let selectedFile = null;
+let selectedRemoteFile = null;
+
+/* =======================
+   LOGIN GOOGLE
+======================= */
+function loginWithGoogle() {
+  const clientId = '718961920868-s0tjl2judu6hurbg9glq3nlop9coqog1.apps.googleusercontent.com';
+  const redirectUri = window.location.origin + '/';
+  const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly';
+
+  sessionStorage.setItem('provider', 'google');
+
+  const authUrl =
+    `https://accounts.google.com/o/oauth2/v2/auth` +
+    `?response_type=token` +
+    `&client_id=${clientId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&scope=${encodeURIComponent(scope)}`;
+
+  window.location.href = authUrl;
+}
+
+/* =======================
+   LOGIN MICROSOFT
+======================= */
+function loginWithMicrosoft() {
+  const clientId = '218686d6-0f9f-43fd-be66-b51283579215';
+  const redirectUri = window.location.origin + '/';
+  const scope = 'Files.Read User.Read';
+
+  sessionStorage.setItem('provider', 'microsoft');
+
+  const authUrl =
+    `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
+    `?response_type=token` +
+    `&client_id=${clientId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&scope=${encodeURIComponent(scope)}`;
+
+  window.location.href = authUrl;
+}
+
+/* =======================
+   TOKEN
+======================= */
+function extractTokenFromHash() {
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+
+  accessToken = params.get("access_token");
+  provider = sessionStorage.getItem("provider");
+
+  if (accessToken) {
+    // limpa a URL por segurança
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}
+
+/* =======================
+   BUSCA EMAIL
+======================= */
+async function fetchUserEmail() {
+  if (!accessToken || !provider) return;
+
+  try {
+    if (provider === 'google') {
+      const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const data = await res.json();
+      userEmail = data.email;
+    } else if (provider === 'microsoft') {
+      const res = await fetch('https://graph.microsoft.com/v1.0/me', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const data = await res.json();
+      userEmail = data.mail || data.userPrincipalName;
+    }
+  } catch (e) {
+    console.error("Erro ao buscar e-mail:", e);
+  }
+}
+
+/* =======================
+   UI
+======================= */
+function enableCloudUploadUI() {
+  const cloudBtn = document.getElementById("cloud-picker-btn");
+
+  if (provider === "google") {
+    cloudBtn.style.display = "block";
+    cloudBtn.onclick = openGooglePicker;
+  }
+
+  if (provider === "microsoft") {
+    cloudBtn.style.display = "block";
+    cloudBtn.onclick = openOneDrivePicker;
+  }
+}
+
+/* =======================
+   UPLOAD
+======================= */
 function setupUploadHandler() {
   const fileInput = document.getElementById("file");
   const fileNameDisplay = document.getElementById("file-name");
@@ -7,7 +114,7 @@ function setupUploadHandler() {
 
   fileInput.addEventListener("change", (event) => {
     selectedFile = event.target.files[0];
-    selectedRemoteFile = null; // reseta seleção da nuvem
+    selectedRemoteFile = null;
     fileNameDisplay.textContent = selectedFile ? `📎 ${selectedFile.name}` : "";
     uploadButton.style.display = selectedFile ? "block" : "none";
   });
@@ -19,8 +126,8 @@ function setupUploadHandler() {
     }
 
     const formData = new FormData();
-    formData.append("userEmail", userEmail);
-    formData.append("provider", provider);
+    formData.append("userEmail", userEmail || "sem-login");
+    formData.append("provider", provider || "local");
 
     if (selectedFile) {
       formData.append("file", selectedFile);
@@ -42,11 +149,5 @@ function setupUploadHandler() {
         selectedFile = null;
         selectedRemoteFile = null;
       } else {
-        alert("❌ Falha ao enviar o arquivo.");
-      }
-    } catch (error) {
-      alert("❌ Erro ao enviar: " + error.message);
-    }
-  });
-}
+        alert("❌ Falha ao enviar o
 
