@@ -87,7 +87,20 @@ async function fetchUserEmail() {
 function setupUI() {
   document.getElementById("auth-buttons").style.display = "none";
   document.getElementById("upload-section").style.display = "block";
+
+  const cloudBtn = document.getElementById("cloud-picker-btn");
+
+  if (provider === "google") {
+    cloudBtn.style.display = "block";
+    cloudBtn.onclick = openGooglePicker;
+  }
+
+  if (provider === "microsoft") {
+    cloudBtn.style.display = "block";
+    cloudBtn.onclick = openOneDrivePicker;
+  }
 }
+
 
 /* =======================
    UPLOAD
@@ -148,3 +161,90 @@ window.onload = async () => {
     setupUploadHandler();
   }
 };
+
+/* =======================
+   GOOGLE DRIVE PICKER
+======================= */
+
+const GOOGLE_API_KEY = "SUA_GOOGLE_API_KEY_AQUI";
+
+function openGooglePicker() {
+  if (!accessToken) {
+    alert("Você precisa estar logado com Google.");
+    return;
+  }
+
+  gapi.load("picker", () => {
+    const view = new google.picker.View(google.picker.ViewId.DOCS);
+
+    const picker = new google.picker.PickerBuilder()
+      .setDeveloperKey(GOOGLE_API_KEY)
+      .setOAuthToken(accessToken)
+      .addView(view)
+      .setCallback(googlePickerCallback)
+      .build();
+
+    picker.setVisible(true);
+  });
+}
+
+function googlePickerCallback(data) {
+  if (data.action === google.picker.Action.PICKED) {
+    const file = data.docs[0];
+
+    selectedFile = null;
+    selectedRemoteFile = {
+      provider: "google",
+      fileId: file.id,
+      fileName: file.name,
+      mimeType: file.mimeType
+    };
+
+    document.getElementById("file-name").textContent =
+      `☁ Google Drive: ${file.name}`;
+
+    document.getElementById("upload-btn").style.display = "block";
+  }
+}
+
+/* =======================
+   ONEDRIVE PICKER
+======================= */
+
+function openOneDrivePicker() {
+  if (!accessToken) {
+    alert("Você precisa estar logado com Microsoft.");
+    return;
+  }
+
+  OneDrive.open({
+    clientId: "218686d6-0f9f-43fd-be66-b51283579215",
+    action: "query",
+    multiSelect: false,
+    advanced: {
+      accessToken: accessToken
+    },
+    success: function (files) {
+      const file = files.value[0];
+
+      selectedFile = null;
+      selectedRemoteFile = {
+        provider: "microsoft",
+        fileId: file.id,
+        fileName: file.name,
+        downloadUrl: file["@microsoft.graph.downloadUrl"]
+      };
+
+      document.getElementById("file-name").textContent =
+        `☁ OneDrive: ${file.name}`;
+
+      document.getElementById("upload-btn").style.display = "block";
+    },
+    cancel: function () {},
+    error: function (e) {
+      alert("Erro ao abrir OneDrive Picker");
+      console.error(e);
+    }
+  });
+}
+
