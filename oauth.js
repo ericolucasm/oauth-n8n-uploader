@@ -8,7 +8,7 @@ function loginWithGoogle() {
 }
 
 function loginWithMicrosoft() {
-  const clientId = 'SEU_CLIENT_ID_MICROSOFT';
+  const clientId = '218686d6-0f9f-43fd-be66-b51283579215';
   const redirectUri = window.location.href;
   const scope = 'Files.Read';
   const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
