@@ -4,38 +4,68 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>XSolve - Upload com OAuth</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- SDKs para seleção em nuvem -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://js.live.net/v7.2/OneDrive.js"></script>
 </head>
 
 <body>
   <div class="container">
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
+
     <h1>Envie seus arquivos com seu login</h1>
 
-    <!-- Seção de login -->
+    <!-- ================= LOGIN ================= -->
     <div id="auth-buttons">
       <button class="login-button" onclick="loginWithGoogle()">
         <img src="images/google-logo.png" alt="Google" class="login-icon" />
         Login com Google
       </button>
+
       <button class="login-button" onclick="loginWithMicrosoft()">
         <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
         Login com Microsoft
       </button>
     </div>
 
-    <!-- Seção de upload (inicialmente oculta) -->
+    <!-- ================= UPLOAD ================= -->
     <div id="upload-section" style="display: none;">
-      <label for="file" class="custom-file-upload">Selecionar arquivo</label>
+
+      <!-- Upload local -->
+      <label for="file" class="custom-file-upload">
+        Selecionar arquivo do dispositivo
+      </label>
       <input type="file" id="file" />
+
+      <!-- Upload da nuvem (dependendo do provider) -->
+      <button
+        class="custom-file-upload"
+        id="cloud-picker-btn"
+        style="display: none;"
+      >
+        Selecionar arquivo da nuvem
+      </button>
+
+      <!-- Nome do arquivo -->
       <p id="file-name"></p>
-      <button class="login-button" id="upload-btn" style="display: none;">Enviar Arquivo</button>
+
+      <!-- Enviar -->
+      <button
+        class="login-button"
+        id="upload-btn"
+        style="display: none;"
+      >
+        Enviar Arquivo
+      </button>
     </div>
   </div>
 
+  <!-- JS principal -->
   <script src="js/oauth.js"></script>
 </body>
-
-
 </html>
 

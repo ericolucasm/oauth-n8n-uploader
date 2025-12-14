@@ -3,41 +3,75 @@ let provider = null;
 let userEmail = null;
 let selectedFile = null;
 
-// LOGIN GOOGLE
+/* =======================
+   LOGIN GOOGLE
+======================= */
 function loginWithGoogle() {
   const clientId = '718961920868-s0tjl2judu6hurbg9glq3nlop9coqog1.apps.googleusercontent.com';
   const redirectUri = window.location.origin + '/';
   const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly';
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-  provider = 'google';
+
+  sessionStorage.setItem('provider', 'google');
+
+  const authUrl =
+    `https://accounts.google.com/o/oauth2/v2/auth` +
+    `?response_type=token` +
+    `&client_id=${clientId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&scope=${encodeURIComponent(scope)}`;
+
   window.location.href = authUrl;
 }
 
-// LOGIN MICROSOFT
+/* =======================
+   LOGIN MICROSOFT
+======================= */
 function loginWithMicrosoft() {
   const clientId = '218686d6-0f9f-43fd-be66-b51283579215';
   const redirectUri = window.location.origin + '/';
   const scope = 'Files.Read User.Read';
-  const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
-  provider = 'microsoft';
+
+  sessionStorage.setItem('provider', 'microsoft');
+
+  const authUrl =
+    `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
+    `?response_type=token` +
+    `&client_id=${clientId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&scope=${encodeURIComponent(scope)}`;
+
   window.location.href = authUrl;
 }
 
-// EXTRAI O ACCESS TOKEN
+/* =======================
+   TOKEN
+======================= */
 function extractTokenFromHash() {
   const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
+
   accessToken = params.get("access_token");
+  provider = sessionStorage.getItem("provider");
+
+  if (accessToken) {
+    // limpa a URL por segurança
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 }
 
-// BUSCA E-MAIL DO USUÁRIO
+/* =======================
+   BUSCA EMAIL
+======================= */
 async function fetchUserEmail() {
+  if (!accessToken || !provider) return;
+
   if (provider === 'google') {
     const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const data = await res.json();
     userEmail = data.email;
+
   } else if (provider === 'microsoft') {
     const res = await fetch('https://graph.microsoft.com/v1.0/me', {
       headers: { Authorization: `Bearer ${accessToken}` }
@@ -47,32 +81,31 @@ async function fetchUserEmail() {
   }
 }
 
-// ATUALIZA A INTERFACE
+/* =======================
+   UI
+======================= */
 function setupUI() {
   document.getElementById("auth-buttons").style.display = "none";
   document.getElementById("upload-section").style.display = "block";
 }
 
-// TRATA UPLOAD
+/* =======================
+   UPLOAD
+======================= */
 function setupUploadHandler() {
   const fileInput = document.getElementById("file");
   const fileNameDisplay = document.getElementById("file-name");
+  const uploadButton = document.getElementById("upload-btn");
+
+  if (!fileInput || !uploadButton) return;
 
   fileInput.addEventListener("change", (event) => {
-  selectedFile = event.target.files[0];
-  fileNameDisplay.textContent = selectedFile ? `📎 ${selectedFile.name}` : "";
+    selectedFile = event.target.files[0];
+    fileNameDisplay.textContent = selectedFile ? `📎 ${selectedFile.name}` : "";
+    uploadButton.style.display = selectedFile ? "block" : "none";
+  });
 
-  // Exibe botão de envio apenas se houver arquivo
-  const uploadButton = document.getElementById("upload-btn");
-  if (selectedFile) {
-    uploadButton.style.display = "block";
-  } else {
-    uploadButton.style.display = "none";
-  }
-});
-
-
-  document.getElementById("upload-btn").addEventListener("click", async () => {
+  uploadButton.addEventListener("click", async () => {
     if (!selectedFile) {
       alert("Selecione um arquivo primeiro!");
       return;
@@ -84,15 +117,16 @@ function setupUploadHandler() {
     formData.append("provider", provider);
 
     try {
-      const res = await fetch("https://ericopessoal.app.n8n.cloud/webhook-test/document_input", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://ericopessoal.app.n8n.cloud/webhook-test/document_input",
+        { method: "POST", body: formData }
+      );
 
       if (res.ok) {
         alert("✅ Arquivo enviado com sucesso!");
-        document.getElementById("file-name").textContent = "";
-        document.getElementById("file").value = "";
+        fileNameDisplay.textContent = "";
+        fileInput.value = "";
+        uploadButton.style.display = "none";
       } else {
         alert("❌ Falha ao enviar o arquivo.");
       }
@@ -102,7 +136,9 @@ function setupUploadHandler() {
   });
 }
 
-// EXECUTA AO ABRIR A PÁGINA
+/* =======================
+   INIT
+======================= */
 window.onload = async () => {
   extractTokenFromHash();
 
