@@ -1,127 +1,21 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XSolve - Upload Seguro</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom, #c7e1ff, #e3f0ff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 100%;
-      max-width: 420px;
-    }
-    .logo {
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #1a3e72;
-      margin-bottom: 0.25rem;
-    }
-    .subtitle {
-      font-size: 0.9rem;
-      color: #5079b3;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-    }
-    .title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .google {
-      background: white;
-      border: 1px solid #ccc;
-      color: #444;
-    }
-    .microsoft {
-      background: white;
-      border: 1px solid #ccc;
-      color: #444;
-    }
-    .email-display {
-      margin: 1.2rem 0;
-      color: #555;
-      font-size: 0.95rem;
-    }
-    .upload-box {
-      border: 2px dashed #ccc;
-      padding: 1.5rem;
-      border-radius: 12px;
-      background-color: #f9f9f9;
-      cursor: pointer;
-      margin-bottom: 1rem;
-    }
-    .file-name {
-      background: #e6f7ea;
-      padding: 0.75rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .upload-button {
-      background-color: #1a73e8;
-      color: white;
-      font-weight: 600;
-    }
-  </style>
+  <title>XSolve - Upload com OAuth</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="container">
-    <div class="logo">XSolve</div>
-    <div class="subtitle">CONSULTORIA</div>
-    <div class="title">Sign in to upload a file</div>
-    <button class="google" onclick="location.href='/auth/google'">Sign in with Google</button>
-    <button class="microsoft" onclick="location.href='/auth/microsoft'">Sign in with Microsoft</button>
-    <div class="email-display" id="user-email">us@example.com</div>
-    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-      Drag and drop a file here or click to browse
-    </div>
-    <input type="file" id="fileInput" style="display: none" onchange="displayFileName(event)" />
-    <div class="file-name" id="file-name" style="display: none">
-      <span id="fileLabel">document.pdf</span>
-      <span style="color: green; font-size: 1.2rem;">&#10003;</span>
-    </div>
-    <button class="upload-button" onclick="uploadFile()">Upload</button>
+    <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
+    <h1>Envie seus arquivos com seu login</h1>
+    <button onclick="loginWithGoogle()">Login com Google</button>
+    <button onclick="loginWithMicrosoft()">Login com Microsoft</button>
+    <input type="file" id="fileInput" style="display: none;" />
   </div>
 
-  <script>
-    function displayFileName(event) {
-      const file = event.target.files[0];
-      if (file) {
-        document.getElementById('file-name').style.display = 'flex';
-        document.getElementById('fileLabel').textContent = file.name;
-      }
-    }
-    function uploadFile() {
-      // lógica de upload será definida no backend com OAuth
-      alert('Upload initiated (dummy function).');
-    }
-  </script>
+  <script src="js/oauth.js"></script>
 </body>
 </html>
