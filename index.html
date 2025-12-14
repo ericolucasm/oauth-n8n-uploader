@@ -12,27 +12,29 @@
 
     <h1>Envie seus arquivos com seu login</h1>
 
-    <!-- Botão Google -->
-    <button class="login-button" onclick="loginWithGoogle()">
-      <img
-        src="images/google-logo.png"
-        alt="Google"
-        class="login-icon"
-      />
-      Login com Google
-    </button>
+    <!-- ===== BOTÕES DE LOGIN ===== -->
+    <div id="auth-buttons">
+      <button class="login-button" onclick="loginWithGoogle()">
+        <img src="images/google-logo.png" alt="Google" class="login-icon" />
+        Login com Google
+      </button>
 
-    <!-- Botão Microsoft -->
-    <button class="login-button" onclick="loginWithMicrosoft()">
-      <img
-        src="images/microsoft-logo.png"
-        alt="Microsoft"
-        class="login-icon"
-      />
-      Login com Microsoft
-    </button>
+      <button class="login-button" onclick="loginWithMicrosoft()">
+        <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
+        Login com Microsoft
+      </button>
+    </div>
 
-    <input type="file" id="fileInput" />
+    <!-- ===== SEÇÃO DE UPLOAD (inicialmente oculta) ===== -->
+    <div id="upload-section" style="display: none;">
+      <input type="file" id="file" />
+
+      <p id="file-name"></p>
+
+      <button id="upload-btn" class="login-button">
+        Enviar arquivo
+      </button>
+    </div>
   </div>
 
   <script src="js/oauth.js"></script>
