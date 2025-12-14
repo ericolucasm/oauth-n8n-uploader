@@ -35,11 +35,15 @@
       <button class="login-button" onclick="voltarParaHome()">← Voltar à Home</button>
     </div>
 
-    <!-- LOGIN (apenas Google, usado antes do Picker) -->
+    <!-- LOGIN -->
     <div id="auth-buttons" style="display: none;">
       <button class="login-button" onclick="loginWithGoogle()">
         <img src="images/google-logo.png" alt="Google" class="login-icon" />
         Login com Google
+      </button>
+      <button class="login-button" onclick="loginWithMicrosoft()">
+        <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
+        Login com Microsoft
       </button>
     </div>
 
@@ -53,11 +57,8 @@
 
     <!-- UPLOAD NUVEM -->
     <div id="upload-nuvem" style="display: none;">
-      <button class="custom-file-upload" onclick="loginWithGoogle()">
-        Selecionar via Google Drive
-      </button>
-      <button class="custom-file-upload" onclick="openOneDrivePicker()">
-        Selecionar via OneDrive
+      <button class="custom-file-upload" id="cloud-picker-btn" onclick="openCloudPicker()">
+        Selecionar arquivo da nuvem
       </button>
     </div>
 

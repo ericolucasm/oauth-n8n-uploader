@@ -96,23 +96,3 @@ input[type="file"] {
 #fileInput {
   margin-top: 20px;
 }
-
-/* Melhorias visuais adicionais */
-.login-button, .custom-file-upload {
-  margin-bottom: 10px;
-}
-
-#upload-actions {
-  margin-top: 20px;
-}
-
-#file-name {
-  margin-top: 15px;
-  font-style: italic;
-  font-size: 14px;
-  color: #555;
-}
-
-.container {
-  transition: all 0.3s ease-in-out;
-}
