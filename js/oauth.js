@@ -166,7 +166,7 @@ window.onload = async () => {
    GOOGLE DRIVE PICKER
 ======================= */
 
-const GOOGLE_API_KEY = "SUA_GOOGLE_API_KEY_AQUI";
+const GOOGLE_API_KEY = "AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I";
 
 function openGooglePicker() {
   if (!accessToken) {
