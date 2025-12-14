@@ -4,26 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>XSolve - Upload com OAuth</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div class="container">
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
     <h1>Envie seus arquivos com seu login</h1>
-
-    <button class="login-button" onclick="loginWithGoogle()">
-      <img src="images/google-logo.png" alt="Google" class="login-icon" />
-      Login com Google
-    </button>
-
-    <button class="login-button" onclick="loginWithMicrosoft()">
-      <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
-      Login com Microsoft
-    </button>
-
+    <button onclick="loginWithGoogle()">Login com Google</button>
+    <button onclick="loginWithMicrosoft()">Login com Microsoft</button>
     <input type="file" id="fileInput" />
   </div>
 
   <script src="js/oauth.js"></script>
 </body>
 </html>
+

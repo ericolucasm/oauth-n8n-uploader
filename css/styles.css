@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url('images/bg-clouds.png') no-repeat center center fixed;
+  background: url('../images/bg-clouds.png') no-repeat center center fixed;
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -23,28 +23,18 @@ body {
 
 .logo {
   width: 120px;
-  height: auto;
   margin-bottom: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
-
 
 h1 {
   font-size: 24px;
   margin-bottom: 20px;
 }
 
-.login-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 300px;
+button {
+  display: block;
   margin: 10px auto;
-  padding: 12px 20px;
+  padding: 12px 24px;
   font-size: 16px;
   font-weight: bold;
   border: none;
@@ -55,13 +45,8 @@ h1 {
   transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+button:hover {
   background-color: #004b84;
-}
-
-.login-icon {
-  width: 20px;
-  height: 20px;
 }
 
 input[type="file"] {
