@@ -6,38 +6,38 @@
   <title>XSolve - Upload com OAuth</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
   <div class="container">
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
-
     <h1>Envie seus arquivos com seu login</h1>
 
-    <!-- ===== BOTÕES DE LOGIN ===== -->
+    <!-- Seção de login -->
     <div id="auth-buttons">
       <button class="login-button" onclick="loginWithGoogle()">
         <img src="images/google-logo.png" alt="Google" class="login-icon" />
         Login com Google
       </button>
-
       <button class="login-button" onclick="loginWithMicrosoft()">
         <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
         Login com Microsoft
       </button>
     </div>
 
-    <!-- ===== SEÇÃO DE UPLOAD (inicialmente oculta) ===== -->
+    <!-- Seção de upload (inicialmente oculta) -->
     <div id="upload-section" style="display: none;">
+      <label for="file" class="custom-file-upload">
+        Selecionar arquivo
+      </label>
       <input type="file" id="file" />
-
       <p id="file-name"></p>
-
-      <button id="upload-btn" class="login-button">
-        Enviar arquivo
-      </button>
+      <button class="login-button" id="upload-btn">Enviar Arquivo</button>
     </div>
   </div>
 
   <script src="js/oauth.js"></script>
 </body>
+
+
 </html>
 
