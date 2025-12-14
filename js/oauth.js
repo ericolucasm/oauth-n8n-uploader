@@ -55,7 +55,6 @@ function extractTokenFromHash() {
   provider = sessionStorage.getItem("provider");
 
   if (accessToken) {
-    // limpa a URL por segurança
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 }
@@ -86,7 +85,7 @@ async function fetchUserEmail() {
 }
 
 /* =======================
-   UI
+   UI para nuvem
 ======================= */
 function enableCloudUploadUI() {
   const cloudBtn = document.getElementById("cloud-picker-btn");
@@ -131,7 +130,9 @@ function setupUploadHandler() {
 
     if (selectedFile) {
       formData.append("file", selectedFile);
-    } else if (selectedRemoteFile) {
+    }
+
+    if (selectedRemoteFile) {
       formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
     }
 
@@ -149,5 +150,103 @@ function setupUploadHandler() {
         selectedFile = null;
         selectedRemoteFile = null;
       } else {
-        alert("❌ Falha ao enviar o
+        alert("❌ Falha ao enviar o arquivo.");
+      }
+    } catch (error) {
+      alert("❌ Erro ao enviar: " + error.message);
+    }
+  });
+}
+
+/* =======================
+   INIT
+======================= */
+window.onload = async () => {
+  setupUploadHandler();         // sempre ativo
+  extractTokenFromHash();       // verifica se houve login
+
+  if (accessToken) {
+    await fetchUserEmail();
+    enableCloudUploadUI();     // só se logado
+  }
+};
+
+/* =======================
+   GOOGLE DRIVE PICKER
+======================= */
+const GOOGLE_API_KEY = "AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I";
+
+function openGooglePicker() {
+  if (!accessToken) {
+    alert("Você precisa estar logado com Google.");
+    return;
+  }
+
+  gapi.load("picker", () => {
+    const view = new google.picker.View(google.picker.ViewId.DOCS);
+
+    const picker = new google.picker.PickerBuilder()
+      .setDeveloperKey(GOOGLE_API_KEY)
+      .setOAuthToken(accessToken)
+      .addView(view)
+      .setCallback(googlePickerCallback)
+      .build();
+
+    picker.setVisible(true);
+  });
+}
+
+function googlePickerCallback(data) {
+  if (data.action === google.picker.Action.PICKED) {
+    const file = data.docs[0];
+
+    selectedFile = null;
+    selectedRemoteFile = {
+      provider: "google",
+      fileId: file.id,
+      fileName: file.name,
+      mimeType: file.mimeType
+    };
+
+    document.getElementById("file-name").textContent = `☁ Google Drive: ${file.name}`;
+    document.getElementById("upload-btn").style.display = "block";
+  }
+}
+
+/* =======================
+   ONEDRIVE PICKER
+======================= */
+function openOneDrivePicker() {
+  if (!accessToken) {
+    alert("Você precisa estar logado com Microsoft.");
+    return;
+  }
+
+  OneDrive.open({
+    clientId: "218686d6-0f9f-43fd-be66-b51283579215",
+    action: "query",
+    multiSelect: false,
+    advanced: { accessToken: accessToken },
+    success: function (files) {
+      const file = files.value[0];
+
+      selectedFile = null;
+      selectedRemoteFile = {
+        provider: "microsoft",
+        fileId: file.id,
+        fileName: file.name,
+        downloadUrl: file["@microsoft.graph.downloadUrl"]
+      };
+
+      document.getElementById("file-name").textContent = `☁ OneDrive: ${file.name}`;
+      document.getElementById("upload-btn").style.display = "block";
+    },
+    cancel: function () {},
+    error: function (e) {
+      alert("Erro ao abrir OneDrive Picker");
+      console.error(e);
+    }
+  });
+}
+
 
