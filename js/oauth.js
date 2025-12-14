@@ -59,9 +59,18 @@ function setupUploadHandler() {
   const fileNameDisplay = document.getElementById("file-name");
 
   fileInput.addEventListener("change", (event) => {
-    selectedFile = event.target.files[0];
-    fileNameDisplay.textContent = selectedFile ? `📎 ${selectedFile.name}` : "";
-  });
+  selectedFile = event.target.files[0];
+  fileNameDisplay.textContent = selectedFile ? `📎 ${selectedFile.name}` : "";
+
+  // Exibe botão de envio apenas se houver arquivo
+  const uploadButton = document.getElementById("upload-btn");
+  if (selectedFile) {
+    uploadButton.style.display = "block";
+  } else {
+    uploadButton.style.display = "none";
+  }
+});
+
 
   document.getElementById("upload-btn").addEventListener("click", async () => {
     if (!selectedFile) {
