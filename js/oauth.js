@@ -5,6 +5,30 @@ let selectedFile = null;
 let selectedRemoteFile = null;
 
 /* =======================
+   FLUXO DE TELA
+======================= */
+function escolherDispositivo() {
+  resetUI();
+  document.getElementById("upload-local").style.display = "block";
+  document.getElementById("upload-actions").style.display = "block";
+  document.getElementById("home-options").style.display = "none";
+  document.getElementById("voltar-home").style.display = "block";
+}
+
+function escolherNuvem() {
+  resetUI();
+  document.getElementById("auth-buttons").style.display = "block";
+  document.getElementById("home-options").style.display = "none";
+  document.getElementById("voltar-home").style.display = "block";
+}
+
+function voltarParaHome() {
+  resetUI();
+  document.getElementById("home-options").style.display = "block";
+  document.getElementById("voltar-home").style.display = "none";
+}
+
+/* =======================
    LOGIN GOOGLE
 ======================= */
 function loginWithGoogle() {
@@ -85,31 +109,31 @@ async function fetchUserEmail() {
 }
 
 /* =======================
-   UI para nuvem
+   PICKER
 ======================= */
 function enableCloudUploadUI() {
-  const cloudBtn = document.getElementById("cloud-picker-btn");
+  document.getElementById("auth-buttons").style.display = "none";
+  document.getElementById("upload-nuvem").style.display = "block";
+  document.getElementById("upload-actions").style.display = "block";
+
+  const pickerBtn = document.getElementById("cloud-picker-btn");
 
   if (provider === "google") {
-    cloudBtn.style.display = "block";
-    cloudBtn.onclick = openGooglePicker;
+    pickerBtn.onclick = openGooglePicker;
   }
 
   if (provider === "microsoft") {
-    cloudBtn.style.display = "block";
-    cloudBtn.onclick = openOneDrivePicker;
+    pickerBtn.onclick = openOneDrivePicker;
   }
 }
 
 /* =======================
-   UPLOAD
+   ENVIO DE ARQUIVO
 ======================= */
 function setupUploadHandler() {
   const fileInput = document.getElementById("file");
   const fileNameDisplay = document.getElementById("file-name");
   const uploadButton = document.getElementById("upload-btn");
-
-  if (!fileInput || !uploadButton) return;
 
   fileInput.addEventListener("change", (event) => {
     selectedFile = event.target.files[0];
@@ -128,27 +152,19 @@ function setupUploadHandler() {
     formData.append("userEmail", userEmail || "sem-login");
     formData.append("provider", provider || "local");
 
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-    }
-
-    if (selectedRemoteFile) {
-      formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
-    }
+    if (selectedFile) formData.append("file", selectedFile);
+    if (selectedRemoteFile) formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
 
     try {
-      const res = await fetch(
-        "https://ericopessoal.app.n8n.cloud/webhook-test/document_input",
-        { method: "POST", body: formData }
-      );
+      const res = await fetch("https://ericopessoal.app.n8n.cloud/webhook-test/document_input", {
+        method: "POST",
+        body: formData,
+      });
 
       if (res.ok) {
         alert("✅ Arquivo enviado com sucesso!");
-        fileNameDisplay.textContent = "";
-        fileInput.value = "";
-        uploadButton.style.display = "none";
-        selectedFile = null;
-        selectedRemoteFile = null;
+        resetUI();
+        voltarParaHome();
       } else {
         alert("❌ Falha ao enviar o arquivo.");
       }
@@ -159,20 +175,20 @@ function setupUploadHandler() {
 }
 
 /* =======================
-   INIT
+   INICIALIZAÇÃO
 ======================= */
 window.onload = async () => {
-  setupUploadHandler();         // sempre ativo
-  extractTokenFromHash();       // verifica se houve login
+  setupUploadHandler();
+  extractTokenFromHash();
 
   if (accessToken) {
     await fetchUserEmail();
-    enableCloudUploadUI();     // só se logado
+    enableCloudUploadUI();
   }
 };
 
 /* =======================
-   GOOGLE DRIVE PICKER
+   GOOGLE PICKER
 ======================= */
 const GOOGLE_API_KEY = "AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I";
 
@@ -247,6 +263,20 @@ function openOneDrivePicker() {
       console.error(e);
     }
   });
+}
+
+/* =======================
+   RESET UI
+======================= */
+function resetUI() {
+  document.getElementById("auth-buttons").style.display = "none";
+  document.getElementById("upload-local").style.display = "none";
+  document.getElementById("upload-nuvem").style.display = "none";
+  document.getElementById("upload-actions").style.display = "none";
+  document.getElementById("file-name").textContent = "";
+  document.getElementById("file").value = "";
+  selectedFile = null;
+  selectedRemoteFile = null;
 }
 
 

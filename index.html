@@ -8,64 +8,66 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- SDKs carregadas com defer -->
+  <!-- SDKs -->
   <script src="https://apis.google.com/js/api.js" defer></script>
   <script src="https://js.live.net/v7.2/OneDrive.js" defer></script>
 
   <!-- JS principal -->
   <script src="js/oauth.js" defer></script>
 </head>
-
 <body>
   <div class="container">
-    <!-- LOGO -->
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
-
     <h1>Envie seus arquivos com segurança</h1>
 
-    <!-- ================= LOGIN ================= -->
-    <div id="auth-buttons">
+    <!-- HOME: Escolha entre local ou nuvem -->
+    <div id="home-options">
+      <button class="login-button" onclick="escolherDispositivo()">
+        Selecionar do Dispositivo
+      </button>
+      <button class="login-button" onclick="escolherNuvem()">
+        Selecionar da Nuvem
+      </button>
+    </div>
+
+    <!-- VOLTAR -->
+    <div id="voltar-home" style="display: none; margin-top: 20px;">
+      <button class="login-button" onclick="voltarParaHome()">← Voltar à Home</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="auth-buttons" style="display: none;">
       <button class="login-button" onclick="loginWithGoogle()">
         <img src="images/google-logo.png" alt="Google" class="login-icon" />
         Login com Google
       </button>
-
       <button class="login-button" onclick="loginWithMicrosoft()">
         <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
         Login com Microsoft
       </button>
     </div>
 
-    <!-- ================= UPLOAD ================= -->
-    <div id="upload-section">
-      
-      <!-- Upload local (disponível sempre) -->
+    <!-- UPLOAD LOCAL -->
+    <div id="upload-local" style="display: none;">
       <label for="file" class="custom-file-upload">
-        Selecionar arquivo do dispositivo
+        Escolher arquivo do dispositivo
       </label>
       <input type="file" id="file" />
+    </div>
 
-      <!-- Upload da nuvem (aparece apenas após login) -->
-      <button
-        class="custom-file-upload"
-        id="cloud-picker-btn"
-        style="display: none;"
-        onclick="openCloudPicker()"
-      >
+    <!-- UPLOAD NUVEM -->
+    <div id="upload-nuvem" style="display: none;">
+      <button class="custom-file-upload" id="cloud-picker-btn" onclick="openCloudPicker()">
         Selecionar arquivo da nuvem
       </button>
+    </div>
 
-      <!-- Nome do arquivo selecionado -->
-      <p id="file-name"></p>
+    <!-- Nome do arquivo -->
+    <p id="file-name"></p>
 
-      <!-- Botão de envio -->
-      <button
-        class="login-button"
-        id="upload-btn"
-        style="display: none;"
-      >
-        Enviar Arquivo
-      </button>
+    <!-- Enviar -->
+    <div id="upload-actions" style="display: none;">
+      <button class="login-button" id="upload-btn">Enviar Arquivo</button>
     </div>
   </div>
 </body>
