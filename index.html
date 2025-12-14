@@ -9,12 +9,13 @@
   <link rel="stylesheet" href="css/styles.css" />
 
   <!-- SDKs para seleção em nuvem -->
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="https://js.live.net/v7.2/OneDrive.js"></script>
+  <script src="https://apis.google.com/js/api.js" defer></script>
+  <script src="https://js.live.net/v7.2/OneDrive.js" defer></script>
 </head>
 
 <body>
   <div class="container">
+    <!-- LOGO -->
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
 
     <h1>Envie seus arquivos com seu login</h1>
@@ -34,23 +35,24 @@
 
     <!-- ================= UPLOAD ================= -->
     <div id="upload-section" style="display: none;">
-
+      
       <!-- Upload local -->
       <label for="file" class="custom-file-upload">
         Selecionar arquivo do dispositivo
       </label>
       <input type="file" id="file" />
 
-      <!-- Upload da nuvem (dependendo do provider) -->
+      <!-- Upload da nuvem (Drive ou OneDrive) -->
       <button
         class="custom-file-upload"
         id="cloud-picker-btn"
         style="display: none;"
+        onclick="openCloudPicker()"
       >
         Selecionar arquivo da nuvem
       </button>
 
-      <!-- Nome do arquivo -->
+      <!-- Nome do arquivo selecionado -->
       <p id="file-name"></p>
 
       <!-- Enviar -->
@@ -68,4 +70,3 @@
   <script src="js/oauth.js"></script>
 </body>
 </html>
-
