@@ -1,47 +1,58 @@
-
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
   margin: 0;
-  text-align: center;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('images/bg-clouds.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333;
 }
+
 .container {
-  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
   padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
   max-width: 500px;
-  width: 100%;
+  width: 90%;
 }
+
 .logo {
   width: 120px;
-  height: auto;
   margin-bottom: 20px;
 }
+
 h1 {
-  margin-bottom: 20px;
   font-size: 24px;
-  color: #102a43;
+  margin-bottom: 20px;
 }
+
 button {
-  margin: 10px;
+  display: block;
+  margin: 10px auto;
   padding: 12px 24px;
   font-size: 16px;
-  cursor: pointer;
+  font-weight: bold;
   border: none;
-  border-radius: 6px;
-  background-color: #2f80ed;
+  border-radius: 8px;
+  background-color: #005a9c;
   color: white;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 button:hover {
-  background-color: #1366d6;
+  background-color: #004b84;
 }
+
 input[type="file"] {
+  display: none;
+}
+
+#fileInput {
   margin-top: 20px;
 }
