@@ -23,7 +23,11 @@ body {
 
 .logo {
   width: 120px;
+  height: auto;
   margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h1 {
@@ -31,10 +35,15 @@ h1 {
   margin-bottom: 20px;
 }
 
-button {
-  display: block;
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
   margin: 10px auto;
-  padding: 12px 24px;
+  padding: 12px 20px;
   font-size: 16px;
   font-weight: bold;
   border: none;
@@ -43,10 +52,17 @@ button {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-button:hover {
+.login-button:hover {
   background-color: #004b84;
+}
+
+.login-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 input[type="file"] {
@@ -56,4 +72,3 @@ input[type="file"] {
 #fileInput {
   margin-top: 20px;
 }
-
