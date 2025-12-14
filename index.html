@@ -8,9 +8,12 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- SDKs para seleção em nuvem -->
+  <!-- SDKs carregadas com defer -->
   <script src="https://apis.google.com/js/api.js" defer></script>
   <script src="https://js.live.net/v7.2/OneDrive.js" defer></script>
+
+  <!-- JS principal -->
+  <script src="js/oauth.js" defer></script>
 </head>
 
 <body>
@@ -18,7 +21,7 @@
     <!-- LOGO -->
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
 
-    <h1>Envie seus arquivos com seu login</h1>
+    <h1>Envie seus arquivos com segurança</h1>
 
     <!-- ================= LOGIN ================= -->
     <div id="auth-buttons">
@@ -34,15 +37,15 @@
     </div>
 
     <!-- ================= UPLOAD ================= -->
-    <div id="upload-section" style="display: none;">
+    <div id="upload-section">
       
-      <!-- Upload local -->
+      <!-- Upload local (disponível sempre) -->
       <label for="file" class="custom-file-upload">
         Selecionar arquivo do dispositivo
       </label>
       <input type="file" id="file" />
 
-      <!-- Upload da nuvem (Drive ou OneDrive) -->
+      <!-- Upload da nuvem (aparece apenas após login) -->
       <button
         class="custom-file-upload"
         id="cloud-picker-btn"
@@ -55,7 +58,7 @@
       <!-- Nome do arquivo selecionado -->
       <p id="file-name"></p>
 
-      <!-- Enviar -->
+      <!-- Botão de envio -->
       <button
         class="login-button"
         id="upload-btn"
@@ -65,8 +68,6 @@
       </button>
     </div>
   </div>
-
-  <!-- JS principal -->
-  <script src="js/oauth.js"></script>
 </body>
 </html>
+
