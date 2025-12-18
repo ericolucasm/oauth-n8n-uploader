@@ -156,7 +156,7 @@ function setupUploadHandler() {
     if (selectedRemoteFile) formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
 
     try {
-      const res = await fetch(https://ericopessoal.app.n8n.cloud/webhook/febc1a1f-f40c-4d15-a098-aad161cd0fa0", {
+      const res = await fetch("https://ericopessoal.app.n8n.cloud/webhook/febc1a1f-f40c-4d15-a098-aad161cd0fa0", {
         method: "POST",
         body: formData,
       });
