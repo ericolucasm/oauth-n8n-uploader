@@ -20,7 +20,7 @@
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
     <h1>Envie seus arquivos com segurança</h1>
 
-    <!-- HOME: Escolha entre local ou nuvem -->
+    <!-- HOME -->
     <div id="home-options">
       <button class="login-button" onclick="escolherDispositivo()">
         Selecionar do Dispositivo
@@ -52,12 +52,13 @@
       <label for="file" class="custom-file-upload">
         Escolher arquivo do dispositivo
       </label>
-      <input type="file" id="file" />
+      <!-- 🔥 ALTERAÇÃO CRÍTICA AQUI -->
+      <input type="file" id="file" name="data" />
     </div>
 
     <!-- UPLOAD NUVEM -->
     <div id="upload-nuvem" style="display: none;">
-      <button class="custom-file-upload" id="cloud-picker-btn" onclick="openCloudPicker()">
+      <button class="custom-file-upload" id="cloud-picker-btn">
         Selecionar arquivo da nuvem
       </button>
     </div>
@@ -70,9 +71,10 @@
       <button class="login-button" id="upload-btn">Enviar Arquivo</button>
     </div>
 
-    <!-- Link para a Planilha de Resultados -->
+    <!-- Resultados -->
     <div class="resultados-link">
-      <p><strong>Resultados (planilha):</strong> 
+      <p>
+        <strong>Resultados (planilha):</strong>
         <a href="https://docs.google.com/spreadsheets/d/1ZwYH7n6vN0I7ueDp5Omz21Zxczj3PwvZpemIeGq64UA/edit?usp=sharing" target="_blank">
           Acesse aqui
         </a>
@@ -81,5 +83,3 @@
   </div>
 </body>
 </html>
-
-
