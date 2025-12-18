@@ -32,11 +32,12 @@ function voltarParaHome() {
    LOGIN GOOGLE
 ======================= */
 function loginWithGoogle() {
-  const clientId = '718961920868-s0tjl2judu6hurbg9glq3nlop9coqog1.apps.googleusercontent.com';
-  const redirectUri = window.location.origin + '/';
-  const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly';
+  const clientId = "718961920868-s0tjl2judu6hurbg9glq3nlop9coqog1.apps.googleusercontent.com";
+  const redirectUri = window.location.origin + "/";
+  const scope =
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly";
 
-  sessionStorage.setItem('provider', 'google');
+  sessionStorage.setItem("provider", "google");
 
   const authUrl =
     `https://accounts.google.com/o/oauth2/v2/auth` +
@@ -52,11 +53,11 @@ function loginWithGoogle() {
    LOGIN MICROSOFT
 ======================= */
 function loginWithMicrosoft() {
-  const clientId = '218686d6-0f9f-43fd-be66-b51283579215';
-  const redirectUri = window.location.origin + '/';
-  const scope = 'Files.Read User.Read';
+  const clientId = "218686d6-0f9f-43fd-be66-b51283579215";
+  const redirectUri = window.location.origin + "/";
+  const scope = "Files.Read User.Read";
 
-  sessionStorage.setItem('provider', 'microsoft');
+  sessionStorage.setItem("provider", "microsoft");
 
   const authUrl =
     `https://login.microsoftonline.com/common/oauth2/v2.0/authorize` +
@@ -90,40 +91,21 @@ async function fetchUserEmail() {
   if (!accessToken || !provider) return;
 
   try {
-    if (provider === 'google') {
-      const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-        headers: { Authorization: `Bearer ${accessToken}` }
+    if (provider === "google") {
+      const res = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       const data = await res.json();
       userEmail = data.email;
-    } else if (provider === 'microsoft') {
-      const res = await fetch('https://graph.microsoft.com/v1.0/me', {
-        headers: { Authorization: `Bearer ${accessToken}` }
+    } else if (provider === "microsoft") {
+      const res = await fetch("https://graph.microsoft.com/v1.0/me", {
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       const data = await res.json();
       userEmail = data.mail || data.userPrincipalName;
     }
   } catch (e) {
     console.error("Erro ao buscar e-mail:", e);
-  }
-}
-
-/* =======================
-   PICKER
-======================= */
-function enableCloudUploadUI() {
-  document.getElementById("auth-buttons").style.display = "none";
-  document.getElementById("upload-nuvem").style.display = "block";
-  document.getElementById("upload-actions").style.display = "block";
-
-  const pickerBtn = document.getElementById("cloud-picker-btn");
-
-  if (provider === "google") {
-    pickerBtn.onclick = openGooglePicker;
-  }
-
-  if (provider === "microsoft") {
-    pickerBtn.onclick = openOneDrivePicker;
   }
 }
 
@@ -152,14 +134,23 @@ function setupUploadHandler() {
     formData.append("userEmail", userEmail || "sem-login");
     formData.append("provider", provider || "local");
 
-    if (selectedFile) formData.append("file", selectedFile);
-    if (selectedRemoteFile) formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
+    // 🔴 AQUI ESTÁ A CORREÇÃO CRÍTICA
+    if (selectedFile) {
+      formData.append("data", selectedFile);
+    }
+
+    if (selectedRemoteFile) {
+      formData.append("remoteFile", JSON.stringify(selectedRemoteFile));
+    }
 
     try {
-      const res = await fetch("https://ericopessoal.app.n8n.cloud/webhook/febc1a1f-f40c-4d15-a098-aad161cd0fa0", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://ericopessoal.app.n8n.cloud/webhook/febc1a1f-f40c-4d15-a098-aad161cd0fa0",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (res.ok) {
         alert("✅ Arquivo enviado com sucesso!");
@@ -175,7 +166,7 @@ function setupUploadHandler() {
 }
 
 /* =======================
-   INICIALIZAÇÃO
+   INIT
 ======================= */
 window.onload = async () => {
   setupUploadHandler();
@@ -183,87 +174,8 @@ window.onload = async () => {
 
   if (accessToken) {
     await fetchUserEmail();
-    enableCloudUploadUI();
   }
 };
-
-/* =======================
-   GOOGLE PICKER
-======================= */
-const GOOGLE_API_KEY = "AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I";
-
-function openGooglePicker() {
-  if (!accessToken) {
-    alert("Você precisa estar logado com Google.");
-    return;
-  }
-
-  gapi.load("picker", () => {
-    const view = new google.picker.View(google.picker.ViewId.DOCS);
-
-    const picker = new google.picker.PickerBuilder()
-      .setDeveloperKey(GOOGLE_API_KEY)
-      .setOAuthToken(accessToken)
-      .addView(view)
-      .setCallback(googlePickerCallback)
-      .build();
-
-    picker.setVisible(true);
-  });
-}
-
-function googlePickerCallback(data) {
-  if (data.action === google.picker.Action.PICKED) {
-    const file = data.docs[0];
-
-    selectedFile = null;
-    selectedRemoteFile = {
-      provider: "google",
-      fileId: file.id,
-      fileName: file.name,
-      mimeType: file.mimeType
-    };
-
-    document.getElementById("file-name").textContent = `☁ Google Drive: ${file.name}`;
-    document.getElementById("upload-btn").style.display = "block";
-  }
-}
-
-/* =======================
-   ONEDRIVE PICKER
-======================= */
-function openOneDrivePicker() {
-  if (!accessToken) {
-    alert("Você precisa estar logado com Microsoft.");
-    return;
-  }
-
-  OneDrive.open({
-    clientId: "218686d6-0f9f-43fd-be66-b51283579215",
-    action: "query",
-    multiSelect: false,
-    advanced: { accessToken: accessToken },
-    success: function (files) {
-      const file = files.value[0];
-
-      selectedFile = null;
-      selectedRemoteFile = {
-        provider: "microsoft",
-        fileId: file.id,
-        fileName: file.name,
-        downloadUrl: file["@microsoft.graph.downloadUrl"]
-      };
-
-      document.getElementById("file-name").textContent = `☁ OneDrive: ${file.name}`;
-      document.getElementById("upload-btn").style.display = "block";
-    },
-    cancel: function () {},
-    error: function (e) {
-      alert("Erro ao abrir OneDrive Picker");
-      console.error(e);
-    }
-  });
-}
 
 /* =======================
    RESET UI
@@ -278,6 +190,3 @@ function resetUI() {
   selectedFile = null;
   selectedRemoteFile = null;
 }
-
-
-
