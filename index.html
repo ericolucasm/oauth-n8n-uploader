@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="css/styles.css" />
 
   <!-- SDKs -->
-  <script src="https://apis.google.com/js/api.js" defer></script>
-  <script src="https://js.live.net/v7.2/OneDrive.js" defer></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://js.live.net/v7.2/OneDrive.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- JS principal -->
+  <!-- OAuth + Picker -->
   <script src="js/oauth.js" defer></script>
 </head>
 <body>
@@ -22,12 +23,8 @@
 
     <!-- HOME -->
     <div id="home-options">
-      <button class="login-button" onclick="escolherDispositivo()">
-        Selecionar do Dispositivo
-      </button>
-      <button class="login-button" onclick="escolherNuvem()">
-        Selecionar da Nuvem
-      </button>
+      <button class="login-button" onclick="escolherDispositivo()">Selecionar do Dispositivo</button>
+      <button class="login-button" onclick="escolherNuvem()">Selecionar da Nuvem</button>
     </div>
 
     <!-- VOLTAR -->
@@ -35,32 +32,23 @@
       <button class="login-button" onclick="voltarParaHome()">← Voltar à Home</button>
     </div>
 
-    <!-- LOGIN -->
+    <!-- LOGIN GOOGLE -->
     <div id="auth-buttons" style="display: none;">
       <button class="login-button" onclick="loginWithGoogle()">
         <img src="images/google-logo.png" alt="Google" class="login-icon" />
         Login com Google
       </button>
-      <button class="login-button" onclick="loginWithMicrosoft()">
-        <img src="images/microsoft-logo.png" alt="Microsoft" class="login-icon" />
-        Login com Microsoft
-      </button>
     </div>
 
     <!-- UPLOAD LOCAL -->
     <div id="upload-local" style="display: none;">
-      <label for="file" class="custom-file-upload">
-        Escolher arquivo do dispositivo
-      </label>
-      <!-- 🔥 ALTERAÇÃO CRÍTICA AQUI -->
+      <label for="file" class="custom-file-upload">Escolher arquivo do dispositivo</label>
       <input type="file" id="file" name="data" />
     </div>
 
     <!-- UPLOAD NUVEM -->
     <div id="upload-nuvem" style="display: none;">
-      <button class="custom-file-upload" id="cloud-picker-btn">
-        Selecionar arquivo da nuvem
-      </button>
+      <button class="custom-file-upload" id="cloud-picker-btn">Selecionar arquivo da nuvem</button>
     </div>
 
     <!-- Nome do arquivo -->
@@ -69,16 +57,6 @@
     <!-- Enviar -->
     <div id="upload-actions" style="display: none;">
       <button class="login-button" id="upload-btn">Enviar Arquivo</button>
-    </div>
-
-    <!-- Resultados -->
-    <div class="resultados-link">
-      <p>
-        <strong>Resultados (planilha):</strong>
-        <a href="https://docs.google.com/spreadsheets/d/1ZwYH7n6vN0I7ueDp5Omz21Zxczj3PwvZpemIeGq64UA/edit?usp=sharing" target="_blank">
-          Acesse aqui
-        </a>
-      </p>
     </div>
   </div>
 </body>
