@@ -134,7 +134,7 @@ function showGooglePicker() {
   const picker = new google.picker.PickerBuilder()
     .addView(view)
     .setOAuthToken(accessToken)
-    .setDeveloperKey("AIzaSyA3Evl-iG9HMYWq0d3Kxg2OjAxmtkKRz4k") // sua antiga chave de dev
+    .setDeveloperKey("AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I") // sua antiga chave de dev
     .setCallback(pickerCallback)
     .build();
 
