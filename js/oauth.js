@@ -122,7 +122,7 @@ function createGooglePicker() {
     const picker = new google.picker.PickerBuilder()
       .addView(view)
       .setOAuthToken(accessToken)
-      .setDeveloperKey("AIzaSyA_XzW9mrGjQ7h6CnTjBtHPMDPVYqcLNbY") // 🔁 Substitua por sua chave da API
+      .setDeveloperKey("AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I") // 🔁 Substitua por sua chave da API
       .setCallback(pickerCallback)
       .build();
 
