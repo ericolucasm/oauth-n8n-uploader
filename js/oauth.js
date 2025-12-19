@@ -34,8 +34,7 @@ function voltarParaHome() {
 function loginWithGoogle() {
   const clientId = "718961920868-s0tjl2judu6hurbg9glq3nlop9coqog1.apps.googleusercontent.com";
   const redirectUri = window.location.origin + "/";
-  const scope =
-    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly";
+  const scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.readonly";
 
   sessionStorage.setItem("provider", "google");
 
@@ -110,6 +109,44 @@ async function fetchUserEmail() {
 }
 
 /* =======================
+   GOOGLE PICKER
+======================= */
+function createGooglePicker() {
+  if (!accessToken) return;
+
+  gapi.load("picker", { callback: () => {
+    const view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+      .setIncludeFolders(true)
+      .setSelectFolderEnabled(false);
+
+    const picker = new google.picker.PickerBuilder()
+      .addView(view)
+      .setOAuthToken(accessToken)
+      .setDeveloperKey("AIzaSyA_XzW9mrGjQ7h6CnTjBtHPMDPVYqcLNbY") // 🔁 Substitua por sua chave da API
+      .setCallback(pickerCallback)
+      .build();
+
+    picker.setVisible(true);
+  }});
+}
+
+function pickerCallback(data) {
+  if (data.action === google.picker.Action.PICKED) {
+    const file = data.docs[0];
+    selectedRemoteFile = {
+      name: file.name,
+      mimeType: file.mimeType,
+      id: file.id,
+      url: file.url,
+    };
+
+    selectedFile = null;
+    document.getElementById("file-name").textContent = `☁️ ${file.name}`;
+    document.getElementById("upload-btn").style.display = "block";
+  }
+}
+
+/* =======================
    ENVIO DE ARQUIVO
 ======================= */
 function setupUploadHandler() {
@@ -134,7 +171,6 @@ function setupUploadHandler() {
     formData.append("userEmail", userEmail || "sem-login");
     formData.append("provider", provider || "local");
 
-    // 🔴 AQUI ESTÁ A CORREÇÃO CRÍTICA
     if (selectedFile) {
       formData.append("data", selectedFile);
     }
@@ -174,6 +210,11 @@ window.onload = async () => {
 
   if (accessToken) {
     await fetchUserEmail();
+
+    // mostrar botão de seleção da nuvem após login
+    document.getElementById("upload-nuvem").style.display = "block";
+    const pickerBtn = document.getElementById("cloud-picker-btn");
+    pickerBtn.onclick = createGooglePicker;
   }
 };
 
