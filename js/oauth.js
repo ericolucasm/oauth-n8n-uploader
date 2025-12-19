@@ -103,6 +103,10 @@ async function fetchUserEmail() {
       const data = await res.json();
       userEmail = data.mail || data.userPrincipalName;
     }
+
+    // Após login, mostra botão do picker
+    document.getElementById("upload-nuvem").style.display = "block";
+
   } catch (e) {
     console.error("Erro ao buscar e-mail:", e);
   }
@@ -111,38 +115,33 @@ async function fetchUserEmail() {
 /* =======================
    GOOGLE PICKER
 ======================= */
-function createGooglePicker() {
-  if (!accessToken) return;
-
-  gapi.load("picker", { callback: () => {
-    const view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+function createPicker() {
+  if (accessToken && google && google.picker) {
+    const view = new google.picker.DocsView()
       .setIncludeFolders(true)
       .setSelectFolderEnabled(false);
 
     const picker = new google.picker.PickerBuilder()
       .addView(view)
       .setOAuthToken(accessToken)
-      .setDeveloperKey("AIzaSyANw8oeQfWLNwH153Rj_O5DXTCBjxTt7_I") // 🔁 Substitua por sua chave da API
-      .setCallback(pickerCallback)
+      .setDeveloperKey("AIzaSyA_XzW9mrGjQ7h6CnTjBtHPMDPVYqcLNbY") // 🔑 sua API KEY aqui
+      .setCallback(function (data) {
+        if (data.action === google.picker.Action.PICKED) {
+          const file = data.docs[0];
+
+          selectedRemoteFile = {
+            id: file.id,
+            name: file.name,
+            mimeType: file.mimeType,
+          };
+
+          document.getElementById("file-name").textContent = `📎 ${file.name}`;
+          document.getElementById("upload-btn").style.display = "block";
+        }
+      })
       .build();
 
     picker.setVisible(true);
-  }});
-}
-
-function pickerCallback(data) {
-  if (data.action === google.picker.Action.PICKED) {
-    const file = data.docs[0];
-    selectedRemoteFile = {
-      name: file.name,
-      mimeType: file.mimeType,
-      id: file.id,
-      url: file.url,
-    };
-
-    selectedFile = null;
-    document.getElementById("file-name").textContent = `☁️ ${file.name}`;
-    document.getElementById("upload-btn").style.display = "block";
   }
 }
 
@@ -210,11 +209,12 @@ window.onload = async () => {
 
   if (accessToken) {
     await fetchUserEmail();
+  }
 
-    // mostrar botão de seleção da nuvem após login
-    document.getElementById("upload-nuvem").style.display = "block";
-    const pickerBtn = document.getElementById("cloud-picker-btn");
-    pickerBtn.onclick = createGooglePicker;
+  // Ativa botão do Picker se tiver Google OAuth
+  const pickerBtn = document.getElementById("cloud-picker-btn");
+  if (pickerBtn) {
+    pickerBtn.addEventListener("click", createPicker);
   }
 };
 
