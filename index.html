@@ -1,4 +1,4 @@
-<!DOCTYPE <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -16,15 +16,31 @@
   <!-- OAuth + Picker -->
   <script src="js/oauth.js" defer></script>
 </head>
+
 <body>
   <div class="container">
     <img src="images/xsolve-logo.png" alt="XSolve Consultoria" class="logo" />
     <h1>Envie seus arquivos com segurança</h1>
 
+    <!-- Status do fluxo com API -->
+    <p id="api-flow-status" style="text-align:center; margin-top:10px; display:none;"></p>
+
     <!-- HOME -->
     <div id="home-options">
-      <button class="login-button" onclick="escolherDispositivo()">Selecionar do Dispositivo</button>
-      <button class="login-button" onclick="escolherNuvem()">Selecionar da Nuvem</button>
+
+      <!-- Seção 1: Fluxo Sem API Integrada (atual) -->
+      <div class="flow-section">
+        <h2 class="flow-title">Fluxo Sem API Integrada</h2>
+        <button class="login-button" onclick="escolherDispositivo()">Selecionar do Dispositivo</button>
+        <button class="login-button" onclick="escolherNuvem()">Selecionar da Nuvem</button>
+      </div>
+
+      <!-- Seção 2: Fluxo Com API Integrada (novo) -->
+      <div class="flow-section" style="margin-top: 18px;">
+        <h2 class="flow-title">Fluxo Com API Integrada</h2>
+        <button class="login-button" id="btn-start-api-flow">Iniciar Processamento (API)</button>
+      </div>
+
     </div>
 
     <!-- VOLTAR -->
@@ -68,6 +84,55 @@
       </a>
     </div>
   </div>
+
+  <!-- Script do novo botão (Fluxo Com API Integrada) -->
+  <script>
+    // ✅ COLE A URL DO WEBHOOK DO "Fluxo Com API Integrada" AQUI:
+    // Ex: https://seu-n8n.app.n8n.cloud/webhook/abc123
+    const N8N_WEBHOOK_API_INTEGRADA = "COLE_AQUI_A_URL_DO_WEBHOOK";
+
+    const btnStart = document.getElementById("btn-start-api-flow");
+    const statusEl = document.getElementById("api-flow-status");
+
+    function setStatus(msg, isError = false) {
+      if (!statusEl) return;
+      statusEl.style.display = "block";
+      statusEl.style.color = isError ? "#b00020" : "#1f5e2a";
+      statusEl.style.fontWeight = "600";
+      statusEl.textContent = msg;
+    }
+
+    async function startApiIntegratedFlow() {
+      if (!N8N_WEBHOOK_API_INTEGRADA || N8N_WEBHOOK_API_INTEGRADA.includes("COLE_AQUI")) {
+        setStatus("⚠️ Falta configurar a URL do webhook do fluxo com API integrada.", true);
+        return;
+      }
+
+      btnStart.disabled = true;
+      setStatus("⏳ Iniciando processamento...");
+
+      try {
+        const resp = await fetch(N8N_WEBHOOK_API_INTEGRADA, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          // Payload opcional: ajuda no debug do n8n
+          body: JSON.stringify({ source: "vercel-ui", action: "start" })
+        });
+
+        if (!resp.ok) {
+          const txt = await resp.text().catch(() => "");
+          throw new Error(`HTTP ${resp.status} ${resp.statusText}${txt ? " - " + txt : ""}`);
+        }
+
+        setStatus("✅ Fluxo iniciado com sucesso. Você pode acompanhar a execução no n8n.");
+      } catch (err) {
+        setStatus(`❌ Erro ao iniciar o fluxo: ${err.message}`, true);
+      } finally {
+        btnStart.disabled = false;
+      }
+    }
+
+    if (btnStart) btnStart.addEventListener("click", startApiIntegratedFlow);
+  </script>
 </body>
 </html>
-
