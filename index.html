@@ -89,7 +89,7 @@
   <script>
     // ✅ COLE A URL DO WEBHOOK DO "Fluxo Com API Integrada" AQUI:
     // Ex: https://seu-n8n.app.n8n.cloud/webhook/abc123
-    const N8N_WEBHOOK_API_INTEGRADA = "COLE_AQUI_A_URL_DO_WEBHOOK";
+    const N8N_WEBHOOK_API_INTEGRADA = "https://ericopessoal.app.n8n.cloud/webhook/xsolve-start-api";
 
     const btnStart = document.getElementById("btn-start-api-flow");
     const statusEl = document.getElementById("api-flow-status");
@@ -103,7 +103,7 @@
     }
 
     async function startApiIntegratedFlow() {
-      if (!N8N_WEBHOOK_API_INTEGRADA || N8N_WEBHOOK_API_INTEGRADA.includes("https://ericopessoal.app.n8n.cloud/webhook/xsolve-start-api")) {
+      if (!N8N_WEBHOOK_API_INTEGRADA || N8N_WEBHOOK_API_INTEGRADA.includes("COLE_AQUI")) {
         setStatus("⚠️ Falta configurar a URL do webhook do fluxo com API integrada.", true);
         return;
       }
