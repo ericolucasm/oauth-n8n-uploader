@@ -103,7 +103,7 @@
     }
 
     async function startApiIntegratedFlow() {
-      if (!N8N_WEBHOOK_API_INTEGRADA || N8N_WEBHOOK_API_INTEGRADA.includes("COLE_AQUI")) {
+      if (!N8N_WEBHOOK_API_INTEGRADA || N8N_WEBHOOK_API_INTEGRADA.includes("https://ericopessoal.app.n8n.cloud/webhook/xsolve-start-api")) {
         setStatus("⚠️ Falta configurar a URL do webhook do fluxo com API integrada.", true);
         return;
       }
